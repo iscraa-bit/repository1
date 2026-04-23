@@ -6,13 +6,27 @@
 <style>
     body {
         margin: 0;
-        background: #2b2b2b;
         overflow: hidden;
         display: flex;
         justify-content: center;
         align-items: center;
         height: 100vh;
         font-family: Arial, sans-serif;
+
+        /* ФОНОВАЯ КАРТИНКА */
+        background-image: url("milky-way-starry-sky-night-sky-star-956981.jpeg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    /* затемнение, чтобы искры лучше выглядели */
+    body::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 0;
     }
 
     button {
@@ -34,20 +48,11 @@
         position: absolute;
         top: 0;
         left: 0;
+        z-index: 1;
     }
 </style>
 </head>
-body {
-    margin: 0;
-    background: url("milky-way-starry-sky-night-sky-star-956981.jpeg") no-repeat center center fixed;
-    background-size: cover;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    font-family: Arial, sans-serif;
-}
+<body>
 
 <button id="sparkBtn">Нажми</button>
 <canvas id="canvas"></canvas>
@@ -70,17 +75,15 @@ function createSparks(x, y) {
             vy: Math.random() * -3,
             gravity: 0.08 + Math.random() * 0.05,
             life: 120,
-            size: Math.random() * 1.5 + 1, // маленькие квадраты
-            flicker: Math.random() * 0.5 + 0.75 // базовая яркость
+            size: Math.random() * 1.5 + 1,
+            flicker: Math.random() * 0.5 + 0.75
         });
     }
 }
 
 function drawSpark(s) {
-    // лёгкое мерцание
     const flicker = s.flicker + (Math.random() - 0.5) * 0.1;
 
-    // свечение
     const glow = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.size * 6);
     glow.addColorStop(0, `rgba(255,220,120,${0.4 * flicker})`);
     glow.addColorStop(1, "rgba(255,100,0,0)");
@@ -90,7 +93,6 @@ function drawSpark(s) {
     ctx.arc(s.x, s.y, s.size * 6, 0, Math.PI * 2);
     ctx.fill();
 
-    // сам "квадратик"
     ctx.fillStyle = `rgba(255,200,80,${flicker})`;
     ctx.fillRect(s.x, s.y, s.size, s.size);
 }
